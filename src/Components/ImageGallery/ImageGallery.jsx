@@ -1,7 +1,7 @@
 import propTypes from "prop-types";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 
-const ImageGallery = ({ images, onClickImg }) => {
+const ImageGallery = ({ images, openModal }) => {
   return (
     <div className="ImageContainer">
       <ul className="ImageGallery">
@@ -11,7 +11,7 @@ const ImageGallery = ({ images, onClickImg }) => {
             image={webformatURL}
             largeImageURL={largeImageURL}
             tags={tags}
-            onClickImage={onClickImg}
+            onOpenModal={openModal}
           />
         ))}
       </ul>

@@ -1,96 +1,124 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Searchbar from "./Components/Searchbar/Searchbar";
 import ImageGallery from "./Components/ImageGallery/ImageGallery";
 import Spinner from "./Components/Spinner/Spinner";
 import Modal from "./Components/Modal/Modal";
-import { fetchImages } from "./services/api";
+import fetchImages from "./services/api";
 import Button from "./Components/Button/Button";
 
-class App extends Component {
-  state = {
-    search: "",
-    loading: false,
-    showModal: false,
-    largeImageURL: "",
-    error: null,
-    page: 1,
-    images: [],
-    gallery: 0,
-  };
+function App() {
+  const [page, setPage] = useState(1);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [largeImageURL, setLargeImageUrl] = useState("");
 
-  async componentDidUpdate(_, prevState) {
-    if (prevState.search !== this.state.search) {
-      this.onClickButton();
-    }
-  }
-  onClickButton = () => {
-    if (!this.state.search) return;
-
-    this.setState({ loading: true });
-    const { page, search } = this.state;
-    fetchImages({ page, search })
-      .then(({ hits }) => {
-        this.setState((prevState) => ({
-          images: [...prevState.images, ...hits],
-          gallery: hits.length,
-          page: prevState.page + 1,
-        }));
-
-        if (this.state.gallery === 0) {
-          toast.error("Nothing is found");
+  useEffect(() => {
+    if (!search) return;
+    const onClickButton = async () => {
+      try {
+        const gallery = await fetchImages(search, page);
+        if (gallery.length === 0) {
+          return setError(toast.error("No images were found for $(search}!"));
         }
-
+        setImages((prev) => [...prev, ...gallery]);
+      } catch (error) {
+        setError(toast.error("Something went wrong"));
+      } finally {
+        setLoading(false);
         window.scrollTo({
           top: document.documentElement.scrollHeight,
           behavior: "smooth",
         });
-      })
-      .catch((error) => console.log(error))
-      .finally(() => {
-        this.setState({ loading: false });
-      });
-  };
+      }
+    };
+    onClickButton();
+  }, [page, search]);
 
-  openModal = (largeImageURL) => {
-    this.setState({ bigPicture: largeImageURL, showModal: true });
-  };
-  closeModal = () => {
-    this.setState({ bigPicture: "", showModal: false });
-  };
+  //   setLoading(true);
+  //  const abc = await fetchImages(page, search);
+  // fetchImages(page, search)
+  //   .then((hits) => {
 
-  handleSubmitForm = (inputValue) => {
-    this.setState({
-      images: [],
-      error: null,
-      search: inputValue,
-      page: 1,
-    });
-  };
+  //     if (images.length === 0) {
+  //       return toast.error('No images found');
+  //       setGallery(null);
+  //     }
+  //     setImages(prevState =>
+  //       [...prevState, ...hits],
+  //       //  page + 1,
+  //       );
+  //     })
+  //   }
 
-  render() {
-    const { loading, showModal, bigPicture, images, gallery } = this.state;
-    return (
-      <>
-        <Searchbar onSubmit={this.handleSubmitForm} />
+  //     .catch(error => console.log(error))
+  //     .finally(() => {
+  //       setLoading(false);
+  //       window.scrollTo({
+  //         top: document.documentElement.scrollHeight,
+  //         behavior: 'smooth',
+  //       });
+  //     });
+  // };
 
-        <ImageGallery images={images} onClickImg={this.openModal} />
-        {gallery !== 0 && !loading && (
-          <div className="Btn-wrapper">
-            <Button onClickBtn={this.onClickButton} />
-          </div>
-        )}
-
-        {loading && <Spinner />}
-        {showModal && (
-          <Modal onClose={this.closeModal}>
-            <img src={bigPicture} alt="" />
-          </Modal>
-        )}
-        <ToastContainer />
-      </>
-    );
+  function handleBtn() {
+    setLoading(true);
+    setPage((prevPage) => prevPage + 1);
   }
+
+  // const openModal = (image) => {
+  //   setLargeImageUrl(image);
+  //   setShowModal(true);
+  // }
+  const openModal = (evt) => {
+    setLargeImageUrl(evt.target.dataset.source);
+    closeModal();
+  };
+
+  const closeModal = () => {
+    //  setLargeImageUrl('');
+    //  setShowModal(true);
+    setShowModal(!showModal);
+  };
+  const handleSubmitForm = (value) => {
+    setImages([]);
+    setError(null);
+    setSearch(value);
+    setPage(1);
+    setLoading(true);
+  };
+
+  // const handleSubmitForm = inputValue => {
+  //   setImages([]);
+  //   // setError(null);
+  //   setSearch(inputValue);
+  //   setPage(1);
+  // };
+  return (
+    <>
+      <Searchbar onHandleSubmit={handleSubmitForm} />
+
+      {images.length > 0 && !error && (
+        <ImageGallery images={images} onOpenModal={openModal} />
+      )}
+
+      {loading && <Spinner />}
+
+      {!loading && images.length >= 12 && !error && (
+        <div className="Btn-wrapper">
+          <Button onClickBtn={handleBtn} />
+        </div>
+      )}
+
+      {showModal && (
+        <Modal largeImageURL={largeImageURL} onClose={closeModal} />
+      )}
+      <ToastContainer />
+    </>
+  );
 }
 export default App;

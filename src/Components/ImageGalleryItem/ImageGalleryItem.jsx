@@ -1,13 +1,21 @@
 import propTypes from "prop-types";
 
-const ImageGalleryItem = ({ largeImageURL, tags, onClickImage, image }) => {
+const ImageGalleryItem = ({
+  webfofmatURL,
+  largeImageURL,
+  tags,
+  onClickImage,
+  onOpenModal,
+}) => {
   return (
     <li className="ImageGalleryItem">
       <img
         className="ImageGalleryItem-image"
-        src={image}
+        src={webfofmatURL}
         alt={tags}
-        onClick={() => onClickImage(largeImageURL)}
+        // onClick={() => onClickImage(largeImageURL)}
+        onClick={onOpenModal}
+        data-source={largeImageURL}
       />
     </li>
   );
