@@ -23,7 +23,7 @@ function App() {
       try {
         const gallery = await fetchImages(search, page);
         if (gallery.length === 0) {
-          return setError(toast.error("No images were found for $(search}!"));
+          return setError(toast.error("No images were found!"));
         }
         setImages((prev) => [...prev, ...gallery]);
       } catch (error) {
@@ -39,41 +39,15 @@ function App() {
     onClickButton();
   }, [page, search]);
 
-  //   setLoading(true);
-  //  const abc = await fetchImages(page, search);
-  // fetchImages(page, search)
-  //   .then((hits) => {
-
-  //     if (images.length === 0) {
-  //       return toast.error('No images found');
-  //       setGallery(null);
-  //     }
-  //     setImages(prevState =>
-  //       [...prevState, ...hits],
-  //       //  page + 1,
-  //       );
-  //     })
-  //   }
-
-  //     .catch(error => console.log(error))
-  //     .finally(() => {
-  //       setLoading(false);
-  //       window.scrollTo({
-  //         top: document.documentElement.scrollHeight,
-  //         behavior: 'smooth',
-  //       });
-  //     });
-  // };
-
   function handleBtn() {
     setLoading(true);
     setPage((prevPage) => prevPage + 1);
   }
 
-  // const openModal = (image) => {
-  //   setLargeImageUrl(image);
-  //   setShowModal(true);
+  // const openModal = (picture) => {
+  //   setLargeImageUrl(picture);
   // }
+
   const openModal = (evt) => {
     setLargeImageUrl(evt.target.dataset.source);
     closeModal();
@@ -81,7 +55,6 @@ function App() {
 
   const closeModal = () => {
     //  setLargeImageUrl('');
-    //  setShowModal(true);
     setShowModal(!showModal);
   };
   const handleSubmitForm = (value) => {
@@ -110,7 +83,7 @@ function App() {
 
       {!loading && images.length >= 12 && !error && (
         <div className="Btn-wrapper">
-          <Button onClickBtn={handleBtn} />
+          <Button handleBtn={handleBtn} />
         </div>
       )}
 

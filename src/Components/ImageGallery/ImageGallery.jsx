@@ -8,8 +8,8 @@ const ImageGallery = ({ images, openModal }) => {
         {images.map(({ id, webformatURL, tags, largeImageURL }) => (
           <ImageGalleryItem
             key={id}
-            image={webformatURL}
             largeImageURL={largeImageURL}
+            webfofmatURL={webformatURL}
             tags={tags}
             onOpenModal={openModal}
           />

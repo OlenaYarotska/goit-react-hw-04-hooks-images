@@ -4,7 +4,6 @@ const ImageGalleryItem = ({
   webfofmatURL,
   largeImageURL,
   tags,
-  onClickImage,
   onOpenModal,
 }) => {
   return (
@@ -13,7 +12,6 @@ const ImageGalleryItem = ({
         className="ImageGalleryItem-image"
         src={webfofmatURL}
         alt={tags}
-        // onClick={() => onClickImage(largeImageURL)}
         onClick={onOpenModal}
         data-source={largeImageURL}
       />
@@ -26,5 +24,4 @@ ImageGalleryItem.propTypes = {
   largeImageURL: propTypes.string,
   tags: propTypes.string,
   webformatURL: propTypes.string,
-  onClickImage: propTypes.func,
 };
