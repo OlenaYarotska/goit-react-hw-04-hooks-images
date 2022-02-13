@@ -44,17 +44,13 @@ function App() {
     setPage((prevPage) => prevPage + 1);
   }
 
-  // const openModal = (picture) => {
-  //   setLargeImageUrl(picture);
-  // }
-
-  const openModal = (evt) => {
-    setLargeImageUrl(evt.target.dataset.source);
-    closeModal();
+  const openModal = (largeImageURL) => {
+    setShowModal(true);
+    setLargeImageUrl(largeImageURL);
   };
 
   const closeModal = () => {
-    //  setLargeImageUrl('');
+    setLargeImageUrl("");
     setShowModal(!showModal);
   };
   const handleSubmitForm = (value) => {
@@ -65,18 +61,12 @@ function App() {
     setLoading(true);
   };
 
-  // const handleSubmitForm = inputValue => {
-  //   setImages([]);
-  //   // setError(null);
-  //   setSearch(inputValue);
-  //   setPage(1);
-  // };
   return (
     <>
       <Searchbar onHandleSubmit={handleSubmitForm} />
 
       {images.length > 0 && !error && (
-        <ImageGallery images={images} onOpenModal={openModal} />
+        <ImageGallery images={images} onImgClick={openModal} />
       )}
 
       {loading && <Spinner />}

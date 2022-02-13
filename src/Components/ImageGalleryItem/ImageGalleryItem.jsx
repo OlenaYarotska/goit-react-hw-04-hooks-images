@@ -12,8 +12,7 @@ const ImageGalleryItem = ({
         className="ImageGalleryItem-image"
         src={webfofmatURL}
         alt={tags}
-        onClick={onOpenModal}
-        data-source={largeImageURL}
+        onClick={() => onOpenModal(largeImageURL)}
       />
     </li>
   );

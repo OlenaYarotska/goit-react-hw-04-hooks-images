@@ -1,7 +1,7 @@
 import propTypes from "prop-types";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 
-const ImageGallery = ({ images, openModal }) => {
+const ImageGallery = ({ images, onImgClick }) => {
   return (
     <div className="ImageContainer">
       <ul className="ImageGallery">
@@ -11,7 +11,7 @@ const ImageGallery = ({ images, openModal }) => {
             largeImageURL={largeImageURL}
             webfofmatURL={webformatURL}
             tags={tags}
-            onOpenModal={openModal}
+            onOpenModal={onImgClick}
           />
         ))}
       </ul>
@@ -23,5 +23,5 @@ export default ImageGallery;
 
 ImageGallery.propTypes = {
   images: propTypes.array,
-  onClickImg: propTypes.func,
+  onImgClick: propTypes.func,
 };

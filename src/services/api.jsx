@@ -6,10 +6,6 @@ const fetchImages = async (search, page) => {
   const { data } = await axios.get(
     `${BaseUrl}?q=${search}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
   );
-
-  // const fetchedImages = await response;
-
-  // return fetchedImages.data;
   return data.hits;
 };
 export default fetchImages;
