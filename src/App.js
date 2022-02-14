@@ -16,6 +16,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageUrl] = useState("");
+  const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
     if (!search) return;
@@ -23,9 +24,17 @@ function App() {
       try {
         const gallery = await fetchImages(search, page);
         if (gallery.length === 0) {
-          return setError(toast.error("No images were found!"));
+          setShowButton(false);
+          return setError(
+            toast.error("No images were found, change your search query!")
+          );
+        }
+        if (gallery.length < 12) {
+          setShowButton(false);
+          return toast.info("End of gallery");
         }
         setImages((prev) => [...prev, ...gallery]);
+        setShowButton(true);
       } catch (error) {
         setError(toast.error("Something went wrong"));
       } finally {
@@ -71,7 +80,7 @@ function App() {
 
       {loading && <Spinner />}
 
-      {!loading && images.length >= 12 && !error && (
+      {!loading && !error && showButton && (
         <div className="Btn-wrapper">
           <Button handleBtn={handleBtn} />
         </div>
